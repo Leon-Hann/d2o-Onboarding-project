@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Onboarding
 
-## Getting Started
+A minimal Next.js app with:
 
-First, run the development server:
+- **`/`** — email + password login page
+- **`/users`** — protected page listing every user in the system
+
+Frontend pages call Next.js API routes (`/api/auth/login`, `/api/auth/logout`, `/api/users`), which talk to Supabase. Auth uses Supabase Auth; the user list is fetched server-side with the Supabase Admin API (service-role key), so no extra database table is required.
+
+## 1. Create a Supabase project
+
+1. Go to [supabase.com](https://supabase.com), sign in, and create a new project.
+2. In **Project Settings → API**, copy:
+   - **Project URL**
+   - **anon public** key
+   - **service_role** key (keep this secret — server-only)
+3. Under **Authentication → Providers**, make sure **Email** is enabled. For quick local testing you can also disable "Confirm email" under **Authentication → Sign In / Providers → Email** so seeded/new users can log in immediately.
+
+## 2. Configure environment variables
+
+Copy the example file and fill in the three values from step 1:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.local.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR-PROJECT-REF.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-public-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+`.env.local` is gitignored and must never be committed.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 3. Install dependencies and run locally
 
-## Learn More
+```bash
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](http://localhost:3000).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 4. Seed sample users
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+With `.env.local` filled in, create 5 sample accounts (`alice@example.com` … `erin@example.com`, all with password `Password123!`):
 
-## Deploy on Vercel
+```bash
+npm run seed
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The script (`scripts/seed-users.mjs`) uses the Supabase Admin API and is safe to re-run — it skips users that already exist. Log in with any of the seeded emails and that password.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 5. Deploy to Vercel
+
+1. Push this repo to GitHub.
+2. In [Vercel](https://vercel.com), import the repo as a new project (framework preset: Next.js).
+3. Add the same three environment variables from `.env.local` in **Project Settings → Environment Variables**.
+4. Deploy.
+
+You (the account owner) need to do the actual GitHub push and Vercel project creation/login — those steps require your own credentials/accounts.
+
+## Project structure
+
+```
+middleware.ts                  Redirects unauthenticated visitors away from /users
+src/lib/supabase/client.ts     Browser Supabase client
+src/lib/supabase/server.ts     Server Supabase client (Server Components/Route Handlers)
+src/lib/supabase/admin.ts      Service-role client (server-only, used to list all users)
+src/lib/supabase/middleware.ts Session refresh + route protection logic
+src/app/page.tsx               Login page
+src/app/api/auth/login         POST — signs in with email/password
+src/app/api/auth/logout        POST — signs out
+src/app/users/page.tsx         Protected users list page
+src/app/api/users              GET — returns all users (requires auth)
+scripts/seed-users.mjs         Seeds sample users via the Admin API
+```
