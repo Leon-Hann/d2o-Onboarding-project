@@ -1,14 +1,25 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import {createClient} from "@supabase/supabase-js"
 import { createAdminClient } from "@/lib/supabase/admin";
 
-export async function GET() {
-  const supabase = await createClient();
+export async function GET(request: Request) {
+  const authHeader = request.headers.get("Authorization");
+  const token = authHeader?.replace("Bearer ", "");
+
+  if (!token) {
+    return NextResponse.json({error: "Not authenticated."}, {status: 401});
+  }
+
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  );
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+    error: userError,
+  } = await supabase.auth.getUser(token);
 
-  if (!user) {
+  if (userError || !user) {
     return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
   }
 

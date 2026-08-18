@@ -10,21 +10,26 @@ type ApiUser = {
   lastSignInAt: string | null;
 };
 
-export default function UsersList({
-  currentUserEmail,
-}: {
-  currentUserEmail: string;
-}) {
+export default function UsersList() {
   const router = useRouter();
   const [users, setUsers] = useState<ApiUser[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const token = localStorage.getItem("access_token");
+
+    if (!token) {
+      router.push("/");
+      return;
+    }
+
     let cancelled = false;
 
     async function load() {
       try {
-        const res = await fetch("/api/users");
+        const res = await fetch("/api/users", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         const data = await res.json();
 
         if (!res.ok) {
@@ -42,10 +47,10 @@ export default function UsersList({
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [router]);
 
-  async function handleLogout() {
-    await fetch("/api/auth/logout", { method: "POST" });
+  function handleLogout() {
+    localStorage.removeItem("access_token");
     router.push("/");
     router.refresh();
   }
@@ -55,7 +60,6 @@ export default function UsersList({
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-xl font-semibold">Users</h1>
-          <p className="text-sm text-neutral-500">Signed in as {currentUserEmail}</p>
         </div>
         <button
           onClick={handleLogout}
