@@ -41,8 +41,8 @@ export default function LoginPage() {
 
   return (
     <main className="flex flex-1 items-center justify-center p-6">
-      <div className="w-full max-w-sm">
-        <h1 className="text-xl font-semibold mb-6 text-center">Sign in</h1>
+      <div className="w-full max-w-sm bg-white rounded-md shadow-md p-8 ">
+        <h1 className="text-xl font-semibold mb-6 text-center">Welcome back!</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
             <label htmlFor="email" className="text-sm font-medium">
@@ -55,7 +55,7 @@ export default function LoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+              className="form_input"
               placeholder="you@example.com"
             />
           </div>
@@ -71,7 +71,7 @@ export default function LoginPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="border rounded-md px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+              className="form_input"
               placeholder="••••••••"
             />
           </div>
@@ -85,7 +85,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 rounded-md bg-blue-600 text-white text-sm font-medium py-2 disabled:opacity-60"
+            className="mt-2 rounded-md button_primary text-sm font-medium py-2 disabled:opacity-60"
           >
             {loading ? "Signing in..." : "Sign in"}
           </button>

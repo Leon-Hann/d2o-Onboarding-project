@@ -10,17 +10,29 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-inter: var(--font-inter);
+  --font-montserrat: var(--font-montserrat);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-montserrat);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family:var(--font-inter);
+  @apply bg-gradient-to-br from-emerald-50 to-gray-50;
+
 }
+
+.button_primary {
+  background: #10B981;
+  color: #ffffff
+}
+
+.form_input {
+  @apply rounded-md border border-transparent bg-emerald-50 px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200;
+}
+
