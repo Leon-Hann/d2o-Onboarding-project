@@ -85,7 +85,7 @@ export default function UsersList() {
       )}
 
       {users && (
-        <div className="overflow-hidden border rounded-md">
+        <div className="hidden md:block overflow-hidden border rounded-md">
           <table className="w-full text-sm">
             <thead className="bg-neutral-50 text-left text-neutral-900">
               <tr>
@@ -110,6 +110,22 @@ export default function UsersList() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {users && (
+        <div className="flex flex-col gap-2 md:hidden">
+          {users.map((u) => (
+            <div key={u.id} className="border rounded-md p-4">
+              <p className="font-medium">{u.email}</p>
+              <p className="text-sm text-neutral-500">
+                Created: {new Date(u.createdAt).toLocaleString()}
+              </p>
+              <p className="text-sm text-neutral-500">
+                Last sign-in: {u.lastSignInAt ? new Date(u.lastSignInAt).toLocaleString() : "Never"}
+              </p>
+            </div>
+          ))}
         </div>
       )}
     </div>
