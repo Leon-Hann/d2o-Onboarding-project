@@ -15,6 +15,8 @@ export default function UsersList() {
   const router = useRouter();
   const [users, setUsers] = useState<ApiUser[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
@@ -28,7 +30,7 @@ export default function UsersList() {
 
     async function load() {
       try {
-        const res = await fetch("/api/users", {
+        const res = await fetch(`/api/users?page=${page}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -38,7 +40,10 @@ export default function UsersList() {
           return;
         }
 
-        if (!cancelled) setUsers(data.users);
+        if (!cancelled) {
+          setUsers(data.users);
+          setHasMore(data.hasMore);
+        }
       } catch {
         if (!cancelled) setError("Something went wrong. Please try again.");
       }
@@ -48,7 +53,7 @@ export default function UsersList() {
     return () => {
       cancelled = true;
     };
-  }, [router]);
+  }, [router, page]);
 
   function handleLogout() {
     localStorage.removeItem("access_token");
@@ -126,6 +131,26 @@ export default function UsersList() {
               </p>
             </div>
           ))}
+        </div>
+      )}
+
+      {users && (
+        <div className="flex items-center justify-between mt-4">
+          <button
+            onClick={() => setPage(page - 1)}
+            disabled={page === 1}
+            className="text-sm font-medium border rounded-md px-3 py-1.5 hover:bg-neutral-50 disabled:opacity-40"
+          >
+            Previous
+          </button>
+          <span className="text-sm text-neutral-500">Page {page}</span>
+          <button
+            onClick={() => setPage(page + 1)}
+            disabled={!hasMore}
+            className="text-sm font-medium border rounded-md px-3 py-1.5 hover:bg-neutral-50 disabled:opacity-40"
+          >
+            Next
+          </button>
         </div>
       )}
     </div>

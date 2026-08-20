@@ -25,6 +25,14 @@ const SEED_USERS = [
   { email: "carol@example.com", password: "Password123!" },
   { email: "dave@example.com", password: "Password123!" },
   { email: "erin@example.com", password: "Password123!" },
+  { email: "henry@example.com", password: "Password123!" },
+  { email: "iris@example.com", password: "Password123!" },
+  { email: "jack@example.com", password: "Password123!" },
+  { email: "kate@example.com", password: "Password123!" },
+  { email: "liam@example.com", password: "Password123!" },
+  { email: "mia@example.com", password: "Password123!" },
+  { email: "noah@example.com", password: "Password123!" },
+  { email: "olivia@example.com", password: "Password123!" },
 ];
 
 for (const { email, password } of SEED_USERS) {

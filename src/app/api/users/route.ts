@@ -2,7 +2,12 @@ import { NextResponse } from "next/server";
 import {createClient} from "@supabase/supabase-js"
 import { createAdminClient } from "@/lib/supabase/admin";
 
+const PAGE_SIZE = 5;
+
 export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const page = Number(url.searchParams.get("page")) || 1;
+
   const authHeader = request.headers.get("Authorization");
   const token = authHeader?.replace("Bearer ", "");
 
@@ -25,23 +30,24 @@ export async function GET(request: Request) {
 
   const admin = createAdminClient();
   const { data, error } = await admin.auth.admin.listUsers({
-    perPage: 1000,
+    page,
+    perPage: PAGE_SIZE,
   });
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  const users = data.users
-    .map((u) => ({
-      id: u.id,
-      email: u.email,
-      createdAt: u.created_at,
-      lastSignInAt: u.last_sign_in_at,
-    }))
-    .sort((a, b) => a.email?.localeCompare(b.email ?? "") ?? 0);
+  const users = data.users.map((u) => ({
+    id: u.id,
+    email: u.email,
+    createdAt: u.created_at,
+    lastSignInAt: u.last_sign_in_at,
+  }));
 
-  return NextResponse.json({ users });
+  const hasMore = users.length === PAGE_SIZE;
+
+  return NextResponse.json({ users, hasMore });
 }
 
 export async function POST(request: Request) {
