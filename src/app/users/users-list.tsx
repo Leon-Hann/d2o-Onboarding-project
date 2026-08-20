@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type ApiUser = {
   id: string;
@@ -61,12 +62,20 @@ export default function UsersList() {
         <div>
           <h1 className="text-xl font-semibold">Users</h1>
         </div>
-        <button
-          onClick={handleLogout}
-          className="text-sm font-medium border rounded-md px-3 py-1.5 hover:bg-neutral-50"
-        >
-          Sign out
-        </button>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/users/form"
+            className="text-sm font-medium border rounded-md px-3 py-1.5 hover:bg-neutral-50"
+          >
+            New user
+          </Link>
+          <button
+            onClick={handleLogout}
+            className="text-sm font-medium border rounded-md px-3 py-1.5 hover:bg-neutral-50"
+          >
+            Sign out
+          </button>
+        </div>
       </div>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
@@ -78,7 +87,7 @@ export default function UsersList() {
       {users && (
         <div className="overflow-hidden border rounded-md">
           <table className="w-full text-sm">
-            <thead className="bg-neutral-50 text-left">
+            <thead className="bg-neutral-50 text-left text-neutral-900">
               <tr>
                 <th className="px-4 py-2 font-medium">Email</th>
                 <th className="px-4 py-2 font-medium">Created</th>
