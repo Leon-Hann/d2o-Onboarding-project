@@ -65,19 +65,14 @@ export default function UsersList() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-xl font-semibold">Users</h1>
+          <h1 className="text-xl font-semibold">User list</h1>
+          <p className="text_muted">Manage and monitor enterprise user accounts.</p>
         </div>
         <div className="flex items-center gap-2">
-          <Link
-            href="/users/form"
-            className="text-sm font-medium border rounded-md px-3 py-1.5 hover:bg-neutral-50"
-          >
+          <Link href="/users/form" className="button_secondary">
             New user
           </Link>
-          <button
-            onClick={handleLogout}
-            className="text-sm font-medium border rounded-md px-3 py-1.5 hover:bg-neutral-50"
-          >
+          <button onClick={handleLogout} className="button_secondary">
             Sign out
           </button>
         </div>
@@ -90,67 +85,51 @@ export default function UsersList() {
       )}
 
       {users && (
-        <div className="hidden md:block overflow-hidden border rounded-md">
-          <table className="w-full text-sm">
-            <thead className="bg-neutral-50 text-left text-neutral-900">
-              <tr>
-                <th className="px-4 py-2 font-medium">Email</th>
-                <th className="px-4 py-2 font-medium">Created</th>
-                <th className="px-4 py-2 font-medium">Last sign-in</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((u) => (
-                <tr key={u.id} className="border-t">
-                  <td className="px-4 py-2">{u.email}</td>
-                  <td className="px-4 py-2 text-neutral-500">
-                    {new Date(u.createdAt).toLocaleString()}
-                  </td>
-                  <td className="px-4 py-2 text-neutral-500">
-                    {u.lastSignInAt
-                      ? new Date(u.lastSignInAt).toLocaleString()
-                      : "Never"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+        <div className="overflow-hidden rounded-lg border bg-white shadow-md">
+          <div className="hidden bg-neutral-50 md:grid md:grid-cols-3">
+            <div className="table_header">Email</div>
+            <div className="table_header">Created</div>
+            <div className="table_header">Last sign-in</div>
+          </div>
 
-      {users && (
-        <div className="flex flex-col gap-2 md:hidden">
           {users.map((u) => (
-            <div key={u.id} className="border rounded-md p-4">
-              <p className="font-medium">{u.email}</p>
-              <p className="text-sm text-neutral-500">
-                Created: {new Date(u.createdAt).toLocaleString()}
-              </p>
-              <p className="text-sm text-neutral-500">
-                Last sign-in: {u.lastSignInAt ? new Date(u.lastSignInAt).toLocaleString() : "Never"}
-              </p>
+            <div
+              key={u.id}
+              className="grid grid-cols-1 gap-1 border-t p-4 text-sm transition-colors hover:bg-emerald-50 md:grid-cols-3 md:gap-0 md:p-0"
+            >
+              <div className="font-medium md:px-4 md:py-2 md:font-normal">
+                {u.email}
+              </div>
+              <div className="text_muted md:px-4 md:py-2">
+                <span className="md:hidden">Created: </span>
+                {new Date(u.createdAt).toLocaleString()}
+              </div>
+              <div className="text_muted md:px-4 md:py-2">
+                <span className="md:hidden">Last sign-in: </span>
+                {u.lastSignInAt
+                  ? new Date(u.lastSignInAt).toLocaleString()
+                  : "Never"}
+              </div>
             </div>
           ))}
-        </div>
-      )}
 
-      {users && (
-        <div className="flex items-center justify-between mt-4">
-          <button
-            onClick={() => setPage(page - 1)}
-            disabled={page === 1}
-            className="text-sm font-medium border rounded-md px-3 py-1.5 hover:bg-neutral-50 disabled:opacity-40"
-          >
-            Previous
-          </button>
-          <span className="text-sm text-neutral-500">Page {page}</span>
-          <button
-            onClick={() => setPage(page + 1)}
-            disabled={!hasMore}
-            className="text-sm font-medium border rounded-md px-3 py-1.5 hover:bg-neutral-50 disabled:opacity-40"
-          >
-            Next
-          </button>
+          <div className="flex items-center justify-between border-t p-4">
+            <button
+              onClick={() => setPage(page - 1)}
+              disabled={page === 1}
+              className="button_secondary disabled:opacity-40"
+            >
+              Previous
+            </button>
+            <span className="text-sm text-neutral-500">Page {page}</span>
+            <button
+              onClick={() => setPage(page + 1)}
+              disabled={!hasMore}
+              className="button_secondary disabled:opacity-40"
+            >
+              Next
+            </button>
+          </div>
         </div>
       )}
     </div>
