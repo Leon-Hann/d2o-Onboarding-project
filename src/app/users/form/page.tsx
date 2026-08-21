@@ -2,6 +2,9 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import FormField from "../../form-field";
+import BrandHeader from "../../brand-header";
 
 export default function NewUserPage() {
   const router = useRouter();
@@ -42,38 +45,75 @@ export default function NewUserPage() {
     }
   }
 
+  function handleLogout() {
+    localStorage.removeItem("access_token");
+    router.push("/");
+    router.refresh();
+  }
+
   return (
-    <main>
-      <h1>Create new user</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+    <main className="flex-1 p-6 max-w-3xl mx-auto w-full">
+      <section>
+        <div className="flex items-center justify-end gap-2 mb-6 md:justify-between">
+          <h1 className="hidden text-xl font-bold text-emerald-600 md:block">
+            Veridian
+          </h1>
+          <div className="flex items-center gap-2">
+            <Link href="/users" className="button_secondary">
+              Back to users
+            </Link>
+            <button onClick={handleLogout} className="button_secondary">
+              Sign out
+            </button>
+          </div>
         </div>
 
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+        <BrandHeader className="mb-8 text-center md:hidden" />
+
+        <div className="mx-auto max-w-sm rounded-lg border bg-white p-8 shadow-md">
+          <div className="mb-6 text-center md:text-left">
+            <h2 className="text-xl font-semibold">Add new user</h2>
+            <p className="mt-1 text_muted">
+              Provision a new account within the Veridian ecosystem.
+            </p>
+          </div>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <FormField
+              id="email"
+              label="Email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+            />
+
+            <FormField
+              id="password"
+              label="Password"
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+            />
+
+            {error && (
+              <p role="alert" className="error_text">
+                {error}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="button_primary"
+            >
+              {loading ? "Creating..." : "Create user"}
+            </button>
+          </form>
         </div>
-
-        {error && <p role="alert">{error}</p>}
-
-        <button type="submit" disabled={loading}>
-          {loading ? "Creating..." : "Create user"}
-        </button>
-      </form>
+      </section>
     </main>
   );
 }

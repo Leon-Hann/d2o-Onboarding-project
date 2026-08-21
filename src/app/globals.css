@@ -28,8 +28,7 @@ body {
 }
 
 .button_primary {
-  background: #10B981;
-  color: #ffffff
+  @apply mt-2 rounded-md bg-emerald-500 py-2 text-sm font-medium text-white disabled:opacity-60;
 }
 
 .form_input {
@@ -46,5 +45,9 @@ body {
 
 .table_header {
   @apply px-4 py-2 text-xs font-medium uppercase tracking-wide text-neutral-500;
+}
+
+.error_text {
+  @apply text-sm text-red-600;
 }
 

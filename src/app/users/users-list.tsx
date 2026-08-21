@@ -78,7 +78,7 @@ export default function UsersList() {
         </div>
       </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="error_text">{error}</p>}
 
       {!users && !error && (
         <p className="text-sm text-neutral-500">Loading users...</p>

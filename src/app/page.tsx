@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import FormField from "./form-field";
+import BrandHeader from "./brand-header";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -42,10 +43,7 @@ export default function LoginPage() {
 
   return (
     <main className="flex flex-1 flex-col md:items-center md:justify-center md:p-6">
-      <div className="pt-8 mb-8 text-center md:pt-0 md:w-full md:max-w-sm">
-        <h1 className="text-3xl font-bold text-emerald-600">Veridian</h1>
-        <p className="mt-1 text_muted">Admin Console</p>
-      </div>
+      <BrandHeader className="pt-8 mb-8 text-center md:pt-0 md:w-full md:max-w-sm" />
       <div className="flex-1 bg-white rounded-t-2xl shadow-md p-8 md:flex-none md:w-full md:max-w-sm md:rounded-md">
         <div className="mb-6 text-center">
           <h2 className="text-xl font-semibold">Welcome back!</h2>
@@ -75,7 +73,7 @@ export default function LoginPage() {
             />
 
             {error && (
-              <p role="alert" className="text-sm text-red-600">
+              <p role="alert" className="error_text">
                 {error}
               </p>
             )}
@@ -83,7 +81,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-2 rounded-md button_primary text-sm font-medium py-2 disabled:opacity-60"
+              className="button_primary"
             >
               {loading ? "Signing in..." : "Sign in"}
             </button>
